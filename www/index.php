@@ -60,7 +60,7 @@ $app->delete('/book/{id}', function (Request $request, Response $response) use (
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
-    $return = $response->withJson(['msg' => 'Deletando o livro de id {$id}'], 200)
+    $return = $response->withJson(['msg' => "Deletando o livro de id {$id}"], 200)
         ->withHeader('Contetent-type', 'application/json');
     return $return;
 });
