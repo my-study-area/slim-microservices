@@ -1,3 +1,27 @@
 <?php
 require './vendor/autoload.php';
-$app = new \Slim\App;
+
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+
+$container = new \Slim\Container();
+
+$isDevMode = true;
+
+$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src/Models/Entity"), $isDevMode);
+
+echo __DIR__ . "/src/Models/Entity";
+
+$conn = array(
+    'host' => '192.168.99.100',
+    'driver'   => 'pdo_mysql',
+    'user'     => 'root',
+    'password' => 'root',
+    'dbname'   => 'db',
+);
+
+$entityManager = EntityManager::create($conn, $config);
+
+$container['em'] = $entityManager;
+
+$app = new \Slim\App($container);
