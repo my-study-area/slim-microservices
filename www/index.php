@@ -14,8 +14,9 @@ $app->get('/', function (Request $request, Response $response) use ($app) {
 **/
 $app->get('/book', function (Request $request, Response $response) use ($app)
 {
-    $response->getBody()->write("lista de livros");
-    return $response;
+    $return = $response->withJson(['msg' => 'Lista de Livros'], 200)
+        ->withHeader('Content-type', 'application/json');
+    return $return;
 });
 
 /**
@@ -25,7 +26,9 @@ $app->get('/book/{id}', function (Request $request, Response $response) use ($ap
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
-    $response->getBody()->write("Exibindo o livro {$id}");
+    $return = $response->withJson(['msg' => "Exibindo o livro {$id}"], 200)
+        ->withHeader('Content-type', 'apllication/json');
+    return $return;
 });
 
 /**
@@ -33,8 +36,9 @@ $app->get('/book/{id}', function (Request $request, Response $response) use ($ap
 */
 $app->post('/book/', function(Request $request, Response $response) use ($app)
 {
-    $response->getBody()->write("cadastrando um livro");
-    return $response;
+    $return = $response->withJson(['msg' => 'Cadastrando um livro'], 201)
+        ->withHeader('Content-type', 'application/json');
+    return $return;
 });
 
 /**
@@ -44,7 +48,9 @@ $app->put('/book/{id}', function(Request $request, Response $response)
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
-    $response->getBody()->write("Atualizando o livro {$id}");
+    $return = $response->withJson(['msg' => "Atualizando o livro {$id}"], 200)
+        ->withHeader('Content-type', 'application/json');
+    return $return;
 });
 
 /**
@@ -54,7 +60,9 @@ $app->delete('/book/{id}', function (Request $request, Response $response) use (
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
-    $response->getBody()->write("Deleta o livro de id {$id}");
+    $return = $response->withJson(['msg' => 'Deletando o livro de id {$id}'], 200)
+        ->withHeader('Contetent-type', 'application/json');
+    return $return;
 });
 
 
