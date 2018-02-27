@@ -1,6 +1,7 @@
 <?php
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use App\Models\Entity\Book as Book;
 
 require 'bootstrap.php';
 
@@ -36,7 +37,16 @@ $app->get('/book/{id}', function (Request $request, Response $response) use ($ap
 */
 $app->post('/book/', function(Request $request, Response $response) use ($app)
 {
-    $return = $response->withJson(['msg' => 'Cadastrando um livro'], 201)
+    $params = (object) $request->getParams();
+
+    $entityManager = $this->get('em');
+
+    $book = (new Book())->setName($params->name)->setAuthor($params->author);
+
+    $entityManager->persist($book);
+    $entityManager->flush();
+
+    $return = $response->withJson($book, 201)
         ->withHeader('Content-type', 'application/json');
     return $return;
 });
