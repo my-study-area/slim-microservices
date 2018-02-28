@@ -13,7 +13,7 @@ $app->get('/', function (Request $request, Response $response) use ($app) {
 /**
 * Lista de livros
 **/
-$app->get('/book[/]', function (Request $request, Response $response) use ($app)
+$app->get('/book', function (Request $request, Response $response) use ($app)
 {
     $entityManager = $this->get('em');
     $bookRepository = $entityManager->getRepository('App\Models\Entity\Book');
@@ -27,7 +27,7 @@ $app->get('/book[/]', function (Request $request, Response $response) use ($app)
 /**
  * Retornando por id
  */
-$app->get('/book/{id}[/]', function (Request $request, Response $response) use ($app)
+$app->get('/book/{id}', function (Request $request, Response $response) use ($app)
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
@@ -48,7 +48,7 @@ $app->get('/book/{id}[/]', function (Request $request, Response $response) use (
 /**
 * cadastra um novo livro
 */
-$app->post('/book[/]', function(Request $request, Response $response) use ($app)
+$app->post('/book', function(Request $request, Response $response) use ($app)
 {
     $params = (object) $request->getParams();
 
@@ -67,7 +67,7 @@ $app->post('/book[/]', function(Request $request, Response $response) use ($app)
 /**
 * Atualiza os dados do livro
 */
-$app->put('/book/{id}[/]', function(Request $request, Response $response)
+$app->put('/book/{id}', function(Request $request, Response $response)
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
@@ -96,7 +96,7 @@ $app->put('/book/{id}[/]', function(Request $request, Response $response)
 /**
 * Deleta o livro pelo id
 **/
-$app->delete('/book/{id}[/]', function (Request $request, Response $response) use ($app)
+$app->delete('/book/{id}', function (Request $request, Response $response) use ($app)
 {
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
