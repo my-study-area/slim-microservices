@@ -4,7 +4,13 @@ require './vendor/autoload.php';
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
-$container = new \Slim\Container();
+$configs = [
+    'setting' => [
+        'displayErrordetails' => true,
+    ]
+];
+
+$container = new \Slim\Container($configs);
 
 $isDevMode = true;
 
