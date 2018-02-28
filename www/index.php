@@ -36,6 +36,10 @@ $app->get('/book/{id}[/]', function (Request $request, Response $response) use (
     $bookRepository = $entityManager->getRepository('App\models\Entity\Book');
     $book = $bookRepository->find($id);
 
+    if (!$book) {
+        throw new \Exception("Book not found", 404);
+    }
+
     $return = $response->withJson($book, 200)
         ->withHeader('Content-type', 'application/json');
     return $return;
@@ -74,6 +78,10 @@ $app->put('/book/{id}[/]', function(Request $request, Response $response)
     $bookRepository = $entityManager->getRepository('App\Models\Entity\Book');
     $book = $bookRepository->find($id);
 
+    if (!$book) {
+        throw new \Exception("Book not found", 404);
+    }
+
     $book->setName($name)->setAuthor($author);
 
     $entityManager->persist($book);
@@ -96,6 +104,10 @@ $app->delete('/book/{id}[/]', function (Request $request, Response $response) us
     $entityManager = $this->get('em');
     $bookRepository = $entityManager->getRepository('App\Models\Entity\Book');
     $book = $bookRepository->find($id);
+
+    if (!$book) {
+        throw new \Exception("Book not found", 404);
+    }
 
     $entityManager->remove($book);
     $entityManager->flush();
