@@ -37,7 +37,7 @@ $app->get('/book/{id}[/]', function (Request $request, Response $response) use (
     $book = $bookRepository->find($id);
 
     $return = $response->withJson($book, 200)
-        ->withHeader('Content-type', 'apllication/json');
+        ->withHeader('Content-type', 'application/json');
     return $return;
 });
 
