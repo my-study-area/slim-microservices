@@ -37,6 +37,8 @@ $app->get('/book/{id}', function (Request $request, Response $response) use ($ap
     $book = $bookRepository->find($id);
 
     if (!$book) {
+        $logger = $this->get('logger');
+        $logger->warning("Book {$id} Not Found");
         throw new \Exception("Book not found", 404);
     }
 
@@ -59,6 +61,10 @@ $app->post('/book', function(Request $request, Response $response) use ($app)
     $entityManager->persist($book);
     $entityManager->flush();
 
+
+    $logger = $this->get('logger');
+    $logger->info('Book Created!', $book->getValues());
+
     $return = $response->withJson($book, 201)
         ->withHeader('Content-type', 'application/json');
     return $return;
@@ -78,7 +84,10 @@ $app->put('/book/{id}', function(Request $request, Response $response)
     $bookRepository = $entityManager->getRepository('App\Models\Entity\Book');
     $book = $bookRepository->find($id);
 
+    $logger = $this->get('logger');
+
     if (!$book) {
+        $logger->warning("Book {$id} Not Found - Impossible to Update");
         throw new \Exception("Book not found", 404);
     }
 
@@ -87,6 +96,8 @@ $app->put('/book/{id}', function(Request $request, Response $response)
     $entityManager->persist($book);
 
     $entityManager->flush();
+
+    $logger->info("Book {$id} updated!", $book->getValues());
 
     $return = $response->withJson( $book, 200)
         ->withHeader('Content-type', 'application/json');
@@ -101,11 +112,15 @@ $app->delete('/book/{id}', function (Request $request, Response $response) use (
     $route = $request->getAttribute('route');
     $id = $route->getArgument('id');
 
+    $logger = $this->get('logger');
+
     $entityManager = $this->get('em');
     $bookRepository = $entityManager->getRepository('App\Models\Entity\Book');
     $book = $bookRepository->find($id);
 
     if (!$book) {
+        $logger->info("Book {$id} deleted", $book->getValues());
+        $logger->info("Book {$id} not Found");
         throw new \Exception("Book not found", 404);
     }
 

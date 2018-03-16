@@ -4,6 +4,7 @@ require './vendor/autoload.php';
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Psr7Middlewares\Middleware\TrailingSlash;
+use Monolog\Logger;
 
 $configs = [
     'setting' => [
@@ -24,8 +25,39 @@ $container['errorHandler'] = function ($c)
     };
 };
 
+$container['logger'] = function ($container)
+{
+    $logger = new Monolog\Logger('books-microservice');
+    $logfile = __DIR__ . '/logs/books-microservice.log';
+    $stream = new Monolog\Handler\StreamHandler($logfile, Monolog\Logger::DEBUG);
+    $fingersCrossed = new Monolog\Handler\FingersCrossedHandler(
+        $stream, Monolog\Logger::INFO);
+    $logger->pushHandler($fingersCrossed);
+    return $logger;
+};
+
+$container['notAllowedHandler'] = function ($c) {
+    return function ($request, $response, $methods) use ($c) {
+        return $c['response']
+            ->withStatus(405)
+            ->withHeader('Allow', implode(', ', $methods))
+            ->withHeader('Content-Type', 'Application/json')
+            ->withHeader("Access-Control-Allow-Methods", implode(",", $methods))
+            ->withJson(["message" => "Method not Allowed; Method must be one of: " . implode(', ', $methods)], 405);
+    };
+};
+
+$container['notFoundHandler'] = function ($container) {
+    return function ($request, $response) use ($container) {
+        return $container['response']
+            ->withStatus(404)
+            ->withHeader('Content-Type', 'Application/json')
+            ->withJson(['message' => 'Page not found']);
+    };
+};
 
 $isDevMode = true;
+
 
 $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src/Models/Entity"), $isDevMode);
 
